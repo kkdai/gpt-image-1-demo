@@ -2,7 +2,9 @@
 
 這是一個使用 [Streamlit](https://streamlit.io/) 製作的簡易網頁應用，讓你可以輸入一段描述文字，並透過 OpenAI gpt-image-1 API 產生對應的圖片。
 
+## 範例圖片
 
+![範例圖片](img/gpt-img-1.png)
 
 ## 使用方式
 
