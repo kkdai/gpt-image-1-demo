@@ -40,9 +40,9 @@ if st.button("產生圖片") and prompt and api_key:
             img_bytes = base64.b64decode(img_b64)
             col1, col2 = st.columns(2)
             with col1:
-                st.image(uploaded_image, caption="原始圖片", use_column_width=True)
+                st.image(uploaded_image, caption="原始圖片", use_container_width=True)
             with col2:
-                st.image(img_bytes, caption="編輯後的圖片", use_column_width=True)
+                st.image(img_bytes, caption="編輯後的圖片", use_container_width=True)
         else:
             st.error(f"API 錯誤: {response.text}")
     else:
@@ -66,6 +66,6 @@ if st.button("產生圖片") and prompt and api_key:
         if response.status_code == 200:
             img_b64 = response.json()["data"][0]["b64_json"]
             img_bytes = base64.b64decode(img_b64)
-            st.image(img_bytes, caption="產生的圖片", use_column_width=True)
+            st.image(img_bytes, caption="產生的圖片", use_container_width=True)
         else:
             st.error(f"API 錯誤: {response.text}")
