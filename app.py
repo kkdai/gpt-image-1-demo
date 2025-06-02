@@ -26,7 +26,7 @@ if st.button("產生圖片") and prompt and api_key:
         data = {
             "prompt": prompt,
             "model": "gpt-image-1",
-            "size": "1024x1024",
+            "size": "1536x1024",
         }
         with st.spinner("圖片編輯中..."):
             response = requests.post(
@@ -55,7 +55,7 @@ if st.button("產生圖片") and prompt and api_key:
             "prompt": prompt,
             "model": "gpt-image-1",
             "output_format": "png",
-            "size": "1024x1024",
+            "size": "1536x1024",
         }
         with st.spinner("圖片生成中..."):
             response = requests.post(
