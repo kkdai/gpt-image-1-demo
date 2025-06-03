@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 import base64
 import os
+import json
 
 st.title("OpenAI GPT-Image-1 文字生成圖片 Demo")
 
@@ -15,6 +16,29 @@ else:
 uploaded_image = st.file_uploader(
     "（選填）上傳要編輯的圖片", type=["png", "jpg", "jpeg", "webp"]
 )
+
+HISTORY_FILE = "prompt_history.json"
+
+# 讀取歷史 prompt
+if os.path.exists(HISTORY_FILE):
+    with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+        prompt_history = json.load(f)
+else:
+    prompt_history = []
+
+# 即時更新歷史紀錄：每次 prompt 輸入後自動加入
+if prompt and (not prompt_history or prompt != prompt_history[-1]):
+    prompt_history.append(prompt)
+    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(prompt_history, f, ensure_ascii=False, indent=2)
+
+with st.sidebar:
+    st.header("Prompt 歷史紀錄")
+    if prompt_history:
+        for i, p in enumerate(reversed(prompt_history), 1):
+            st.markdown(f"{i}. {p}")
+    else:
+        st.write("尚無歷史紀錄")
 
 if st.button("產生圖片") and prompt and api_key:
     if uploaded_image:
