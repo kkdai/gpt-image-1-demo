@@ -6,7 +6,6 @@ import json
 
 st.title("OpenAI GPT-Image-1 文字生成圖片 Demo")
 
-prompt = st.text_area("請輸入圖片描述（prompt）")
 api_key = os.environ.get("OPENAI_API_KEY")
 if api_key:
     st.info("偵測到 OPENAI_API_KEY 環境變數，將自動使用。")
@@ -27,18 +26,30 @@ else:
     prompt_history = []
 
 # 即時更新歷史紀錄：每次 prompt 輸入後自動加入
-if prompt and (not prompt_history or prompt != prompt_history[-1]):
-    prompt_history.append(prompt)
-    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
-        json.dump(prompt_history, f, ensure_ascii=False, indent=2)
+# 讓 prompt 支援 session_state
+if "prompt" not in st.session_state:
+    st.session_state["prompt"] = ""
 
+# 先處理 sidebar 的歷史紀錄點擊事件
 with st.sidebar:
     st.header("Prompt 歷史紀錄")
     if prompt_history:
         for i, p in enumerate(reversed(prompt_history), 1):
-            st.markdown(f"{i}. {p}")
+            if st.button(f"{i}. {p}", key=f"history_{i}"):
+                st.session_state["prompt"] = p
+                st.rerun()
     else:
         st.write("尚無歷史紀錄")
+
+# 再產生 text_area，value 來自 session_state
+prompt = st.text_area(
+    "請輸入圖片描述( Prompt )", value=st.session_state["prompt"], key="prompt"
+)
+
+if prompt and (not prompt_history or prompt != prompt_history[-1]):
+    prompt_history.append(prompt)
+    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(prompt_history, f, ensure_ascii=False, indent=2)
 
 if st.button("產生圖片") and prompt and api_key:
     if uploaded_image:
